@@ -28,7 +28,7 @@ def changeWallpaper(image_path):
                     image=os.path.join(image_path,dirname,file_name)
                     SPI_SETDESKTOPWALLPAPER=20
                     ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKTOPWALLPAPER,0,image,3)
-                    time.sleep(15)
+                    time.sleep(30)
                 end=time.time()
 
 def main():

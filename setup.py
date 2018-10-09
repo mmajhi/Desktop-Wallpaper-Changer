@@ -6,5 +6,5 @@ setup(
     py_modules = ['Bing','DesktopWallpaperChanger','AddToPath'],
     author = 'Mayukh Majhi',
     author_email = 'mayukhmajhi@gmail.com',
-    description = 'Changes Desktop Background in a interval of 15 secs',
+    description = 'Changes Desktop Background in a interval of 30 secs',
 )
