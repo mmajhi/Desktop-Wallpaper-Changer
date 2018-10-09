@@ -14,16 +14,20 @@ urllib3.disable_warnings()
 def get_image_url(xml):
     # Url and name Pattern
     pattern='<url>(.*?)</url>'
+    description = '<copyright>(.*?)</copyright>'
     http = urllib3.PoolManager()
     raw_xml = http.request('GET', xml)
     soup = BeautifulSoup(raw_xml.data, features='html5lib')
     img_url=re.search(pattern,str(soup)).group(1)
+    img_desc = re.search(description, str(soup)).group(1)
+    img_url=img_url.replace('1366x768','1920x1080')
+
     # Complete Url
     bing = 'https://www.bing.com' + img_url
-    return bing
+    return bing,img_desc
 
 # Function for Downloading Image
-def download_image(url,img_path):
+def download_image(url,img_path,description):
      folder=os.path.join(img_path,'Bing')
      try:
          os.makedirs(folder)
@@ -35,8 +39,25 @@ def download_image(url,img_path):
          return
 
      urllib.request.urlretrieve(url,filename)
+     #Puts the description of the image downloaded
+     putDescription(filename,description)
      #Set the new image as the current wallpaper
      changewallpaper(filename)
+
+def putDescription(image,description):
+    from PIL import Image
+    from PIL import ImageDraw
+    from PIL import ImageFont
+
+    img = Image.open(image)
+    text = 'Performers at the 26th Human Tower Competition in Tarragona, Spain (© Xinhua/Pau Barrena/Getty Images)'
+
+    d = ImageDraw.Draw(img)
+    font = ImageFont.truetype(font='C:\Windows\Fonts\Bahnschrift.ttf', size=16)
+
+    d.text((0, 1000), description, (255, 255, 255), font=font)
+
+    img.save('image_out.jpg')
 
 def changewallpaper(image):
     SPI_SETDESKTOPWALLPAPER = 20
@@ -53,7 +74,7 @@ def wallpaper_of_the_day(img_path):
                'fr-CA', 'fr-CH', 'fr-FR', 'he-IL', 'hr-HR', 'hu-HU', 'it-IT', 'ja-JP', 'ko-KR', 'lt-LT',
                'lv-LV', 'nb-NO', 'nl-BE', 'nl-NL', 'pl-PL', 'pt-BR', 'pt-PT', 'ro-RO', 'ru-RU', 'sk-SK',
                'sl-SL', 'sv-SE', 'th-TH', 'tr-TR', 'uk-UA', 'zh-CN', 'zh-HK', 'zh-TW']'''
-    xml_file = 'https://www.bing.com/HPImageArchive.aspx?format=xml&idx=0&n=2&mkt=en-US'
-    img_url = get_image_url(xml_file)
-    download_image(img_url,img_path)
+    xml_file = 'https://www.bing.com/HPImageArchive.aspx?format=xml&idx=0&n=2&mkt=en-in'
+    img_url,description = get_image_url(xml_file)
+    download_image(img_url,img_path,description)
 
